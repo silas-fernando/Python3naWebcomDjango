@@ -22,11 +22,10 @@ urlpatterns = [
 ]
 """
 from django.contrib import admin 
-from django.urls import path 
-from simplemooc.core import views 
+from django.urls import include, path 
+from simplemooc.core import views
 
 urlpatterns = [ 
-	path('', views.home, name='home'),
-	path('contato/', views.contato, name='contato'),
+	path('', include('simplemooc.core.urls', namespace='core')),
 	path('admin/', admin.site.urls), 
 ]
