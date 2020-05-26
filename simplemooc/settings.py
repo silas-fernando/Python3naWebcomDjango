@@ -126,7 +126,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'simplemooc', 'media')
 MEDIA_URL = '/media/'
 
 # E-mails
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+"""
+Servidor real: 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+Servidor para testes: 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+"""
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'Nome <email@gmail.com>'
 EMAIL_USE_TLS = True
