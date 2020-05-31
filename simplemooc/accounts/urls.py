@@ -12,6 +12,6 @@ urlpatterns = [
 ]
 """
 urlpatterns = [ 
-	path('entrar', LoginView.as_view(), 
-    {'template_name': 'accounts/login.html'}, name='login'),
+	path('entrar/', LoginView.as_view(template_name='accounts/login.html'), 
+         name='login'),
 ]
