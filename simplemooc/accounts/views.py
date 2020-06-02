@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
-from .forms import RegisterForm
+from .forms import RegisterForm, EditAccountForm
 
 # @login_required verifica se o usuário está logado antes de executar a função logo abaixo dele.
 # Se sim, redireciona para o painel do usuário. Senão, redireciona para a página de login.
@@ -12,7 +12,6 @@ from .forms import RegisterForm
 def dashboard(request):
     template_name = 'accounts/dashboard.html'
     return render(request, template_name)
-
 
 def register(request):
     template_name = 'accounts/register.html'
@@ -39,4 +38,7 @@ def register(request):
 @login_required
 def edit(request):
     template_name = 'accounts/edit.html'
-    return render(request, template_name)
+    form = EditAccountForm()
+    context = {}
+    context['form'] = form
+    return render(request, template_name, context)

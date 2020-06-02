@@ -1,0 +1,29 @@
+{% extends "accounts/dashboard.html" %}
+
+{% block breadcrumb %}
+    {{ block.super }} <!--  Chama o conteúdo padrão da tag breadcrumb da dashboard.html -->
+    <li>/</li>
+    <li><a href="{% url 'accounts:edit' %}">Editar Conta</a></li>
+{% endblock %}
+
+{% block dashboard_content %}
+<form class="pure-form pure-form-stacked" method="post">
+    <!-- {% csrf_token %}
+    {% if success %}
+    <p>Os dados foram alterados com sucesso</p>
+    {% endif %}-->
+    <fieldset>
+        {{ form.non_field_errors }} <!-- Filtra e renderiza os erros que não estão associados a nenhum campo-->
+        {% for field in form %} <!-- Para cada campo do formulário é renderizado seus inputs e labels correspondentes-->
+        <div class="pure-control-group">
+            {{ field.label_tag }}
+            {{ field }}
+            {{ field.errors }}
+        </div>
+        {% endfor %}<!-- Fim do loop for-->
+        <div class="pure-controls">
+            <button type="submit" class="pure-button pure-button-primary">Salvar Modificações</button>
+        </div>
+    </fieldset>
+</form>
+{% endblock %}
