@@ -8,10 +8,10 @@
 
 {% block dashboard_content %}
 <form class="pure-form pure-form-stacked" method="post">
-    <!-- {% csrf_token %}
+    {% csrf_token %}
     {% if success %}
     <p>Os dados foram alterados com sucesso</p>
-    {% endif %}-->
+    {% endif %}
     <fieldset>
         {{ form.non_field_errors }} <!-- Filtra e renderiza os erros que não estão associados a nenhum campo-->
         {% for field in form %} <!-- Para cada campo do formulário é renderizado seus inputs e labels correspondentes-->
