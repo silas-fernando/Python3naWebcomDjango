@@ -6,7 +6,9 @@ from django.conf import settings
 
 from .forms import RegisterForm
 
-@login_required # Verifica se o usuário está logado. Se sim, mostra o painel do usuário. Senão, redireciona para a página de login.
+# @login_required verifica se o usuário está logado antes de executar a função logo abaixo dele.
+# Se sim, redireciona para o painel do usuário. Senão, redireciona para a página de login.
+@login_required
 def dashboard(request):
     template_name = 'accounts/dashboard.html'
     return render(request, template_name)
@@ -31,3 +33,10 @@ def register(request):
         'form': form
     }
     return render(request, template_name, context)
+
+# @login_required verifica se o usuário está logado antes de executar a função logo abaixo dele.
+# Se sim, redireciona para o painel do usuário. Senão, redireciona para a página de login.
+@login_required
+def edit(request):
+    template_name = 'accounts/edit.html'
+    return render(request, template_name)
