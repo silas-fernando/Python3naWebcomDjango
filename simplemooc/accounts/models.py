@@ -52,7 +52,7 @@ class PasswordReset(models.Model):
     """
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name='Usuário',
-        on_delete=models.PROTECT, # related_name='resets'
+        on_delete=models.PROTECT, related_name='resets'
     )
     key = models.CharField('Chave', max_length=100, unique=True) 
     created_at = models.DateTimeField('Criado em', auto_now_add=True) # Serve para registrar quando a senha foi alterada e para dar um tempo limite para isso.
