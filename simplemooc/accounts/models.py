@@ -5,6 +5,7 @@ from django.core import validators
 from django.contrib.auth.models import (AbstractBaseUser, # Traz a lógica básica para que o usuário funcione (ex: alterar e criptografar senhas).
                                         PermissionsMixin, # Traz a questão de segurança do Django de permissão e grupos.
                                         UserManager) # Implementa algumas funcões que são importantes para alguns comandos do Django na parte de usuários (ex: criação de superusuário).
+from django.conf import settings
 
 class User(AbstractBaseUser, PermissionsMixin):
 
@@ -39,3 +40,28 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = 'Usuário'
         verbose_name_plural = 'Usuários'
+
+# Implementa a funcionadlidade "Esqueceu a senha?"
+class PasswordReset(models.Model): 
+
+    """" OBSOLETO
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, verbose_name='Usuário',
+        # related_name='resets'
+    )
+    """
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, verbose_name='Usuário',
+        on_delete=models.PROTECT, # related_name='resets'
+    )
+    key = models.CharField('Chave', max_length=100, unique=True) 
+    created_at = models.DateTimeField('Criado em', auto_now_add=True) # Serve para registrar quando a senha foi alterada e para dar um tempo limite para isso.
+    confirmed = models.BooleanField('Confirmado?', default=False, blank=True) # Serve para verificar se o link que será enviado para o usuário mudar a senha já foi usado.
+
+    def __str__(self):
+        return '{0} em {1}'.format(self.user, self.created_at)
+
+    class Meta:
+        verbose_name = 'Nova Senha'
+        verbose_name_plural = 'Novas Senhas'
+        ordering = ['-created_at']
