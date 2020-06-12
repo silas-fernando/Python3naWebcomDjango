@@ -3,10 +3,10 @@ from django.template.defaultfilters import striptags
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 
-def send_mail_template(subject, template_name, context, recipient_list, 
+def send_mail_template(subject, template_name, context, recipient_list, # Pega o assunto, o template, o context e a lista de usuários.
     from_email=settings.DEFAULT_FROM_EMAIL, fail_silently=False):
 
-    message_html = render_to_string(template_name, context)
+    message_html = render_to_string(template_name, context) # Renderiza o template e retorna a string renderizada do template com o contexto indicado.
 
     message_text = striptags(message_html)
 
