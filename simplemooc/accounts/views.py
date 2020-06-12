@@ -1,10 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
-from .forms import RegisterForm, EditAccountForm
+from simplemooc.core.utils import generate_hash_key
+
+from .forms import RegisterForm, EditAccountForm, PasswordResetForm
+from .models import PasswordReset
+
+User = get_user_model()
 
 # @login_required verifica se o usuário está logado antes de executar a função logo abaixo dele.
 # Se sim, redireciona para o painel do usuário. Senão, redireciona para a página de login.
@@ -31,6 +36,19 @@ def register(request):
     context = {
         'form': form
     }
+    return render(request, template_name, context)
+
+def password_reset(request):
+    template_name = 'accounts/password_reset.html'
+    context = {}
+    form = PasswordResetForm(request.POST or None) # Envia o form se houver dados nele ou se estiver vazio
+    if form.is_valid():
+        user = User.objects.get(email=form.cleaned_data['email'])
+        key = generate_hash_key(user.username) # Gera a chave passando o username como salt e atribui a key
+        reset = PasswordReset(key=key, user=user) # Recebe a chave já criptogravada
+        reset.save()
+        context['success'] = True
+    context['form'] =  form
     return render(request, template_name, context)
 
 # @login_required verifica se o usuário está logado antes de executar a função logo abaixo dele.

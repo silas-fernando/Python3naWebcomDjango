@@ -19,7 +19,8 @@ urlpatterns = [
          name='login'),
     path('sair/', LogoutView.as_view(next_page='core:home'), 
          name='logout'),
-    path('cadastre-se/', views.register, name='register'),     
+    path('cadastre-se/', views.register, name='register'), 
+    path('nova-senha/', views.password_reset, name='password_reset'),    
     path('editar/', views.edit, name='edit'),     
     path('editar_senha/', views.edit_password, name='edit_password'),     
 ]
