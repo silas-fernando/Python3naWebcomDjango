@@ -27,6 +27,15 @@
     </div>
 </div>
 <div class="content">
+    {% if messages %} <!-- Verifica se há mensagens para o usuário-->
+    <div class="pure-g-r content-ribbon">
+        <aside class="pure-u-1">
+            {% for message in messages %} <!-- Se houver, exibe cada uma delas na tela. -->
+            <p>{{ message }}</p> <!-- Variável do django que armazena as menssagens do usuário.-->
+            {% endfor %}
+        </aside>
+    </div>
+    {% endif %}
     {% block content %}{% endblock %}
     <div class="footer">
         Simple MOOC - Uma simples plataforma de ensino a distância

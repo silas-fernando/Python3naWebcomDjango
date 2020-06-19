@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from .models import Course, Enrollment
 from .forms import ContactCourse
@@ -44,6 +45,10 @@ def enrollment(request, slug):
 	enrollment, created = Enrollment.objects.get_or_create(
 		user=request.user, course=course
 	) # Pega, ou se não houver, cria uma inscrição para o usuário atual em um determinado curso.
-	# if created: # Se uma nova inscrição foi criado, ela já é ativada.
+	if created: # Se uma nova inscrição foi criado, ela já é ativada.
 		# enrollment.active() 
+		messages.success(request, 'Inscrição efetuada com sucesso')
+	else:
+		messages.info(request, 'Você já esta inscrito nesse curso')
+	
 	return redirect('accounts:dashboard')
