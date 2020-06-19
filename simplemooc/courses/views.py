@@ -1,6 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 
-from .models import Course
+from .models import Course, Enrollment
 from .forms import ContactCourse
 
 def index(request):
@@ -36,3 +37,13 @@ def details(request, slug):
 	context['course'] = course
 	template_name = 'courses/details.html'
 	return render(request, template_name, context)
+
+@login_required # Obriga o usuário estar logado.
+def enrollment(request, slug):
+	course = get_object_or_404(Course, slug=slug) # Recupera o curso atual.
+	enrollment, created = Enrollment.objects.get_or_create(
+		user=request.user, course=course
+	) # Pega, ou se não houver, cria uma inscrição para o usuário atual em um determinado curso.
+	# if created: # Se uma nova inscrição foi criado, ela já é ativada.
+		# enrollment.active() 
+	return redirect('accounts:dashboard')

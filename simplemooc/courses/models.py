@@ -46,6 +46,7 @@ class Course(models.Model):
 
 class Enrollment(models.Model): # Model inscrição
 
+	# Situações possíveis que o inscrição pode assumir.
 	STATUS_CHOICES = (
 		(0, 'Pendente'),
 		(1, 'Aprovado'),
@@ -60,12 +61,16 @@ class Enrollment(models.Model): # Model inscrição
 		Course, verbose_name='Curso', on_delete=models.PROTECT, 
 		related_name='enrollments'
 	)
-	status = models.IntegerField( # Serve para verificar a situação do curso.
+	status = models.IntegerField( # Serve para verificar a situação do curso, se o aluno realmente foi inscrito.
 		'Situação', choices=STATUS_CHOICES, default=0, blank=True
 	)
 
 	created_at = models.DateTimeField('Criado em', auto_now_add=True) # Serve para registrar a data de criação de cada inscrição
 	updated_at = models.DateTimeField('Atualizado em', auto_now=True) # Serve para registrar a data das aterações feitas nas incrições.
+
+	def active(self): # Aprova a inscrição do aluno no curso.
+		self.status = 1
+		self.save()
 
 	class Meta:
 		verbose_name = 'Inscrição'
