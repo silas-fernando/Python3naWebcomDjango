@@ -53,6 +53,23 @@ def enrollment(request, slug): # View Inscrição.
 	
 	return redirect('accounts:dashboard')
 
+@login_required
+def undo_enrollment(request, slug): # View para cancelar inscrição.
+	course = get_object_or_404(Course, slug=slug) # Recupera o curso atual.
+	enrollment = get_object_or_404( # Verifica se ele está inscrito no curso.
+		Enrollment, user=request.user, course=course
+	)
+	if request.method == 'POST':
+		enrollment.delete()
+		messages.success(request, 'Sua inscrição foi cancelada com sucesso')
+		return redirect('accounts:dashboard')
+	template = 'courses/undo_enrollment.html'
+	context = {
+		'enrollment': enrollment,
+		'course': course,
+	}
+	return render(request, template, context)
+
 @login_required # Obriga o usuário estar logado.
 def announcements(request, slug): # View anúncios.
 	course = get_object_or_404(Course, slug=slug) # Recupera o curso atual.

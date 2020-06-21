@@ -1,35 +1,4 @@
-{% extends "accounts/dashboard.html" %}
-
-{% block menu_options %}
-<li class="pure-menu-heading">
-    {{ course }}
-</li>
-<li>
-    <a href="#">
-        <i class="fas fa-video"></i>
-        Aulas e Materiais
-    </a>
-</li>
-<li>
-    <a href="#">
-        <i class="fa fa-info-circle"></i>
-        Informações
-    </a>
-</li>
-<li>
-    <a href="#">
-        <i class="fa fa-envelope"></i>
-        Anúncios
-    </a>
-</li>
-<li>
-    <a href="#">
-        <i class="fa fa-comments"></i>
-        Forum de Dúvidas
-    </a>
-</li>
-{{ block.super }} <!-- Chama o conteúdo base do bloco menu_options que esta em dashboard.html-->
-{% endblock %}
+{% extends "courses/course_dashboard.html" %}
 
 {% block dashboard_content %}
 <div class="well">
