@@ -40,7 +40,7 @@ def details(request, slug):
 	return render(request, template_name, context)
 
 @login_required # Obriga o usuário estar logado.
-def enrollment(request, slug):
+def enrollment(request, slug): # View Inscrição.
 	course = get_object_or_404(Course, slug=slug) # Recupera o curso atual.
 	enrollment, created = Enrollment.objects.get_or_create(
 		user=request.user, course=course
@@ -52,3 +52,19 @@ def enrollment(request, slug):
 		messages.info(request, 'Você já esta inscrito nesse curso')
 	
 	return redirect('accounts:dashboard')
+
+@login_required # Obriga o usuário estar logado.
+def announcements(request, slug): # View anúncios.
+	course = get_object_or_404(Course, slug=slug) # Recupera o curso atual.
+	if not request.user.is_staff: # Se o usuário não for membro do grupo de administradores.
+		enrollment = get_object_or_404( # Verifica se ele está inscrito no curso.
+			Enrollment, user=request.user, course=course
+		)
+		if not enrollment.is_approved(): # Se o usuário não estiver sido aprovado no curso.
+			messages.error(request, 'A sua inscrição está pendente')
+			return redirect('accounts:dashboard')
+	template = 'courses/announcements.html'
+	context = {
+		'course': course
+	}
+	return render(request, template, context)

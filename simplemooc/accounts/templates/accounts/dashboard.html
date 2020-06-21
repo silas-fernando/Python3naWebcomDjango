@@ -3,6 +3,7 @@
 {% load courses_tags %}
 
 {% block content %}
+{% load_my_courses user as enrollments %} <!-- Chama a tag load_my_courses customizada passando o usuário atual-->
 <div class="pure-g-r content-ribbon">
     <div class="pure-u-1">
         <ul class="breadcrumb">
@@ -17,12 +18,12 @@
                 <li class="pure-menu-heading">
                     Bem-vindo, {{ user }}
                 </li>
-                {% load_my_courses user as enrollments %} <!-- Chama a tag load_my_courses customizada passando o usuário atual-->
+                {% block menu_options %}
                 <li class="pure-menu-heading">Cursos</li>
                 {% for enrollment in enrollments %}
                     <li>
-                        <a href="#">
-                            <i class="icon-book"></i>
+                        <a href="{% url 'courses:announcements' enrollment.course.slug %}">
+                            <i class="fas fa-book"></i>
                             {{ enrollment.course }}
                         </a>
                     </li>
@@ -32,16 +33,17 @@
                 <li class="pure-menu-heading">Configurações de Conta</li>
                 <li>
                     <a href="{% url 'accounts:edit' %}">
-                        <i class="icon-cog"></i>
+                        <i class="fas fa-cog"></i>
                         Editar Informações
                     </a>
                 </li>
                 <li>
                     <a href="{% url 'accounts:edit_password' %}">
-                        <i class="icon-lock"></i>
+                        <i class="fas fa-lock"></i>
                         Editar Senha
                     </a>
                 </li>
+                {% endblock %}
             </ul>
         </div>
     </div>
@@ -57,7 +59,7 @@
                 </h3>
                 {{ enrollment.course.description|linebreaks }} <!--linebreaks: filtro utilizado para fazer quebra de parágrafos-->
                 <div class="pure-controls">
-                    <a href="#" class="pure-button pure-button-primary">Acessar</a>
+                    <a href="{% url 'courses:announcements' enrollment.course.slug %}" class="pure-button pure-button-primary">Acessar</a>
                     <a href="#" class="pure-button button-error">Cancelar</a>
                 </div>
             </div>

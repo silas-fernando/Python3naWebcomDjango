@@ -20,4 +20,4 @@ def my_courses(user):
 # a tag for chamada.
 @register.simple_tag 
 def load_my_courses(user):
-    return Enrollment.objects.filter(user=user)
+    return Enrollment.objects.filter(user=user) # Retorna todas as inscrições do usuário.
