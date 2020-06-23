@@ -82,6 +82,25 @@ def announcements(request, slug): # View anúncios.
 			return redirect('accounts:dashboard')
 	template = 'courses/announcements.html'
 	context = {
-		'course': course
+		'course': course,
+		'announcements': course.announcements.all()
+	}
+	return render(request, template, context)
+
+@login_required # Obriga o usuário estar logado.
+def show_announcement(request, slug, pk): # View para exibir os anúncios.
+	course = get_object_or_404(Course, slug=slug) # Recupera o curso atual.
+	if not request.user.is_staff: # Se o usuário não for membro do grupo de administradores.
+		enrollment = get_object_or_404( # Verifica se ele está inscrito no curso.
+			Enrollment, user=request.user, course=course
+		)
+		if not enrollment.is_approved(): # Se o usuário não estiver sido aprovado no curso.
+			messages.error(request, 'A sua inscrição está pendente')
+			return redirect('accounts:dashboard')
+	template = 'courses/show_announcements.html'
+	announcement = get_object_or_404(course.announcements.all(), pk=pk)
+	context = {
+		'course': course, 
+		'announcement': announcement,
 	}
 	return render(request, template, context)
