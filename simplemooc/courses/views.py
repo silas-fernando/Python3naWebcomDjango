@@ -45,8 +45,8 @@ def enrollment(request, slug): # View Inscrição.
 	enrollment, created = Enrollment.objects.get_or_create(
 		user=request.user, course=course
 	) # Pega, ou se não houver, cria uma inscrição para o usuário atual em um determinado curso.
-	if created: # Se uma nova inscrição foi criado, ela já é ativada.
-		# enrollment.active() 
+	if created: 
+		enrollment.active() 
 		messages.success(request, 'Inscrição efetuada com sucesso')
 	else:
 		messages.info(request, 'Você já esta inscrito nesse curso')
