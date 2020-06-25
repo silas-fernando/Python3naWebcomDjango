@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from .models import Course, Enrollment
-from .forms import ContactCourse
+from .forms import ContactCourse, CommentForm
 
 def index(request):
 	courses = Course.objects.all()
@@ -97,10 +97,19 @@ def show_announcement(request, slug, pk): # View para exibir os anúncios.
 		if not enrollment.is_approved(): # Se o usuário não estiver sido aprovado no curso.
 			messages.error(request, 'A sua inscrição está pendente')
 			return redirect('accounts:dashboard')
-	template = 'courses/show_announcements.html'
 	announcement = get_object_or_404(course.announcements.all(), pk=pk)
+	form = CommentForm(request.POST or None)
+	if form.is_valid():
+		comment = form.save(commit=False) # Cria o objeto, atribui os valores preenchidos ao objeto, mas não salva de fato.
+		comment.user = request.user # Informa qual é o usuário.
+		comment.announcement = announcement # Informa qual é o anúncio.
+		comment.save() # Agora cria o objeto, atribui os valores preenchidos e salva.
+		form = CommentForm() # Limpa o form do comentário.
+		messages.success(request, 'Seu comentário foi enviado com sucesso')
+	template = 'courses/show_announcements.html'
 	context = {
 		'course': course, 
 		'announcement': announcement,
+		'form': form,
 	}
 	return render(request, template, context)
