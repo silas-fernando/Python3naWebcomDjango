@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import Course, Enrollment, Lesson
+from .models import Course, Enrollment, Lesson, Material
 from .forms import ContactCourse, CommentForm
 from .decorators import enrollment_required
 
@@ -129,5 +129,24 @@ def lesson(request, slug, pk):
 	context = {
 		'course': course,
 		'lesson': lesson
+	}
+	return render(request, template, context)
+
+@login_required
+@enrollment_required
+def material(request, slug, pk):
+	course = request.course # recupera o curso do request que será passado pelo decorator @enrollment_required.
+	material =  get_object_or_404(Material, pk=pk, lesson__course=course) # lesson__course, acessa propriedade de outro objeto.
+	lesson = material.lesson
+	if not request.user.is_staff and not lesson.is_available():
+		messages.error(request, 'Este material não esta disponível')
+		return redirect('courses:lessons', slug=course.slug, pk=lesson.pk)
+	if not material.is_embedded():
+		return redirect(material.file.url)
+	template = 'courses/material.html'
+	context = {
+		'course': course,
+		'lesson': lesson,
+		'material': material
 	}
 	return render(request, template, context)
