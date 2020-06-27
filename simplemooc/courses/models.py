@@ -46,6 +46,50 @@ class Course(models.Model):
 		verbose_name_plural = 'Cursos'
 		ordering = ['name']
 
+class Lesson(models.Model):
+
+	name = models.CharField('Name', max_length=100)
+	description = models.TextField('Descrição', blank=True)
+	number = models.IntegerField('Número (ordem)', blank=True, default=0)
+	release_date = models.DateField('Data de Liberação', blank=True, null=True)
+
+	course = models.ForeignKey(
+		Course, verbose_name='Curso', 
+		on_delete=models.PROTECT, related_name='lessons'
+	)
+
+	created_at = models.DateTimeField('Criado em', auto_now_add=True) # Serve para registrar a data de criação de cada aula.
+	updated_at = models.DateTimeField('Atualizado em', auto_now=True) # Serve para registrar a data das aterações feitas nas aulas.
+
+	def __str__(self):
+		return self.name
+	
+	class Meta:
+		verbose_name = 'Aula'
+		verbose_name_plural = 'Aulas'
+		ordering = ['number']
+
+class Material(models.Model):
+
+	name = models.CharField('Name', max_length=100)
+	embedded = models.TextField('Video embedded', blank=True)
+	file = models.FileField(upload_to='lessons/materials', blank=True, null=True)
+
+	lesson = models.ForeignKey(
+		Lesson, verbose_name='Aula',
+		related_name='materials', on_delete=models.PROTECT
+	)
+
+	def is_embedded(self):
+		return bool(self.embedded)
+
+	def __str__(self):
+		return self.name
+
+	class Meta:
+		verbose_name = 'Material'
+		verbose_name_plural = 'Materiais'
+
 class Enrollment(models.Model): # Model inscrição
 
 	# Situações possíveis que o inscrição pode assumir.
@@ -138,3 +182,4 @@ def post_save_announcement(instance, created, **kwargs): # Gatilho que dispara u
 models.signals.post_save.connect( 
 	post_save_announcement, sender=Announcement, dispatch_uid='post_save_announcement'
 )
+
