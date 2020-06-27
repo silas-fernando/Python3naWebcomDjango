@@ -4,6 +4,7 @@ from django.contrib import messages
 
 from .models import Course, Enrollment
 from .forms import ContactCourse, CommentForm
+from .decorators import enrollment_required
 
 def index(request):
 	courses = Course.objects.all()
@@ -71,15 +72,9 @@ def undo_enrollment(request, slug): # View para cancelar inscrição.
 	return render(request, template, context)
 
 @login_required # Obriga o usuário estar logado.
+@enrollment_required # Verifica se o usuário está inscrito e aprovado para acessar determinado curso.
 def announcements(request, slug): # View anúncios.
-	course = get_object_or_404(Course, slug=slug) # Recupera o curso atual.
-	if not request.user.is_staff: # Se o usuário não for membro do grupo de administradores.
-		enrollment = get_object_or_404( # Verifica se ele está inscrito no curso.
-			Enrollment, user=request.user, course=course
-		)
-		if not enrollment.is_approved(): # Se o usuário não estiver sido aprovado no curso.
-			messages.error(request, 'A sua inscrição está pendente')
-			return redirect('accounts:dashboard')
+	course = request.course # recupera o curso do request que será passado pelo decorator @enrollment_required.
 	template = 'courses/announcements.html'
 	context = {
 		'course': course,
@@ -88,15 +83,9 @@ def announcements(request, slug): # View anúncios.
 	return render(request, template, context)
 
 @login_required # Obriga o usuário estar logado.
+@enrollment_required # Verifica se o usuário está inscrito e aprovado para acessar determinado curso.
 def show_announcement(request, slug, pk): # View para exibir os anúncios.
-	course = get_object_or_404(Course, slug=slug) # Recupera o curso atual.
-	if not request.user.is_staff: # Se o usuário não for membro do grupo de administradores.
-		enrollment = get_object_or_404( # Verifica se ele está inscrito no curso.
-			Enrollment, user=request.user, course=course
-		)
-		if not enrollment.is_approved(): # Se o usuário não estiver sido aprovado no curso.
-			messages.error(request, 'A sua inscrição está pendente')
-			return redirect('accounts:dashboard')
+	course = request.course # recupera o curso do request que será passado pelo decorator @enrollment_required.
 	announcement = get_object_or_404(course.announcements.all(), pk=pk)
 	form = CommentForm(request.POST or None)
 	if form.is_valid():
