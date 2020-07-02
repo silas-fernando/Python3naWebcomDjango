@@ -23,7 +23,7 @@ isort
 itsdangerous      
 Jinja2            
 kiwisolver        
-lazy-object-proxy 
+lazy-object-proxy==1.4
 MarkupSafe        
 matplotlib        
 mccabe            
