@@ -4,15 +4,14 @@ from django.test.client import Client
 from django.urls import reverse
 from django.conf import settings
 
-
-from .models import Course
+from simplemooc.courses.models import Course
 
 class ContactCourseTestCase(TestCase):
 
     def setUp(self): # Função executada para cada teste antes de sua inicialização.
         self.course = Course.objects.create(name='Django', slug='django')
     
-    def tearDown(self): # Função executada para cada teste antes de sua finalização.
+    def tearDown(self): # Função executada para cada teste depois da sua finalização.
         self.course.delete()
 
     """
