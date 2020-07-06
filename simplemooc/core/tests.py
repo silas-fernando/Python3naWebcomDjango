@@ -1,8 +1,8 @@
-from django.core import mail
 from django.test import TestCase
 from django.test.client import Client
 # OBSOLETO: from django.core.urlresolvers import reverse
 from django.urls import reverse
+
 
 class HomeViewTest(TestCase):
 
@@ -10,7 +10,7 @@ class HomeViewTest(TestCase):
         client = Client()
         response = client.get(reverse('core:home'))
         self.assertEqual(response.status_code, 200)
-    
+
     def test_home_template_used(self):
         client = Client()
         response = client.get(reverse('core:home'))
