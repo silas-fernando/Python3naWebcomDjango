@@ -18,8 +18,24 @@ from .models import Thread
 class ForumView(ListView):  # Model para listagem de Tópicos.
 
     model = Thread
-    paginate_by = 10  # Limita a quantidade de itens listados.
+    # Limita a quantidade de tópicos por página.
+    paginate_by = 2
     template_name = 'forum/index.html'
+
+    def get_queryset(self):
+        queryset = Thread.objects.all()
+        order = self.request.GET.get('order', '')  # Recupera o parâmetro GET.
+        if order == 'views':  # se for viewes ordena por viewes.
+            queryset = queryset.order_by('-views')
+        if order == 'answers':  # Se for answers ordena por answers.
+            queryset = queryset.order_by('-answers')
+        return queryset
+
+    # Busca todos as variáveis de contexto do template.
+    def get_context_data(self, **kwargs):
+        context = super(ForumView, self).get_context_data(**kwargs)
+        context['tags'] = Thread.tags.all()  # Adiciona as tags ao contexto.
+        return context
 
 
 # as_view() Transforma a classe ForumView em uma função que pode ser usada como uma view.

@@ -49,6 +49,14 @@ INSTALLED_APPS = [
     'simplemooc.forum',
 ]
 
+""" DESCONTINUADO
+ from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
+
+ TEMPLATE_CONTEXT_PROCESSORS = TCP + (
+    'django.core.context_processors.request',
+ )
+"""
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -135,9 +143,9 @@ MEDIA_URL = '/media/'
 
 # E-mails
 """
-Servidor real: 
+Servidor real:
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-Servidor para testes: 
+Servidor para testes:
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 """
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
