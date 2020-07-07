@@ -21,18 +21,20 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 """
-from django.contrib import admin 
-from django.urls import include, path 
-from simplemooc.core import views
-from django.conf import settings
-from django.conf.urls.static import static
 
-urlpatterns = [ 
-	path('', include('simplemooc.core.urls', namespace='core')),
+from django.conf.urls.static import static
+from django.conf import settings
+from simplemooc.core import views
+from django.contrib import admin
+from django.urls import include, path
+urlpatterns = [
+    path('', include('simplemooc.core.urls', namespace='core')),
     path('conta/', include('simplemooc.accounts.urls', namespace='accounts')),
     path('cursos/', include('simplemooc.courses.urls', namespace='courses')),
-	path('admin/', admin.site.urls), 
+    path('forum/', include('simplemooc.forum.urls', namespace='forum')),
+    path('admin/', admin.site.urls),
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

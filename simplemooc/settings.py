@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
+import dj_database_url
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'simplemooc.core',
     'simplemooc.accounts',
     'simplemooc.courses',
+    'simplemooc.forum',
 ]
 
 MIDDLEWARE = [
@@ -152,10 +154,10 @@ CONTACT_EMAIL = 'contato@simplemooc.com'
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'core:home'
 LOGOUT_URL = 'accounts:logout'
-AUTH_USER_MODEL = 'accounts.User' # Indica qual o model será usado por padrão para os usuários
+# Indica qual o model será usado por padrão para os usuários
+AUTH_USER_MODEL = 'accounts.User'
 
 # Heroku settings
-import dj_database_url
 
 DATABASES = {
     'default':  dj_database_url.config(),
