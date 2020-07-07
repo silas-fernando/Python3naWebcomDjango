@@ -51,13 +51,14 @@
             <div class="well">
                 <h3><a href="" title="">{{ thread.title }}</a></h3>
                 <h5>
-                    Criado por {{ thread.author }} | {{ thread.answers }} resposta{{ thread.answers|pluralize }} | {{ thread.views }} Visualizaç{{ thread.views|pluralize:"ão,ões" }} 
+                    Criado por {{ thread.author }} | {{ thread.answers }} resposta{{ thread.answers|pluralize }} | 
+                    {{ thread.views }} Visualizaç{{ thread.views|pluralize:"ão,ões" }} 
                 </h5>
                 <p>
                     <i class="fa fa-tags"></i>
                     Tags: 
                     {% for tag in thread.tags.all %}
-                    <a href="" title="">{{ tag }}</a>{% if not forloop.last %},{% endif %}
+                    <a href="" title="">{{ tag }}</a>{% if not forloop.last %},{% endif %} <!-- Se não for a última tag coloca vírgula.-->
                     {% endfor %}
                     <a class="fright" href="" title="">Atualizado a {{ thread.modified|timesince }} atrás</a>
                 </p>
