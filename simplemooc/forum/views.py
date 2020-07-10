@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import TemplateView, View, ListView
+from django.views.generic import TemplateView, View, ListView, DetailView
 
 from .models import Thread
 
@@ -43,5 +43,12 @@ class ForumView(ListView):  # Model para listagem de Tópicos.
         return context
 
 
+class ThreadView(DetailView):
+
+    model = Thread
+    template_name = 'forum/thread.html'
+
+
 # as_view() Transforma a classe ForumView em uma função que pode ser usada como uma view.
 index = ForumView.as_view()
+thread = ThreadView.as_view()
