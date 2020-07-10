@@ -17,7 +17,7 @@
                 </li>
                 <li>
                     <a href="?order=">
-                        <i class="fa fa-refresh"></i>
+                        <i class="fas fa-sync"></i>
                         Mais Recentes
                     </a>
                 </li>
@@ -29,14 +29,14 @@
                 </li>
                 <li>
                     <a href="?order=answers">
-                        <i class="fa fa-comments-o"></i>
+                        <i class="fas fa-comments"></i>
                         Mais Comentados
                     </a>
                 </li>
                 <li class="pure-menu-heading">Tags</li>
                 <li>
                     {% for tag in tags %}
-                    <a href="#" class="tags">
+                    <a href="{% url 'forum:index_tagged' tag.slug %}" class="tags">
                         <i class="fa fa-tag"></i>
                         {{ tag }}
                     </a>
@@ -58,7 +58,7 @@
                     <i class="fa fa-tags"></i>
                     Tags: 
                     {% for tag in thread.tags.all %}
-                    <a href="" title="">{{ tag }}</a>{% if not forloop.last %},{% endif %} <!-- Se não for a última tag coloca vírgula.-->
+                    <a href="{% url 'forum:index_tagged' tag.slug %}" title="">{{ tag }}</a>{% if not forloop.last %},{% endif %} <!-- Se não for a última tag coloca vírgula.-->
                     {% endfor %}
                     <a class="fright" href="" title="">Atualizado a {{ thread.modified|timesince }} atrás</a>
                 </p>

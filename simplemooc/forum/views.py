@@ -25,10 +25,15 @@ class ForumView(ListView):  # Model para listagem de Tópicos.
     def get_queryset(self):
         queryset = Thread.objects.all()
         order = self.request.GET.get('order', '')  # Recupera o parâmetro GET.
-        if order == 'views':  # se for viewes ordena por viewes.
+        if order == 'views':  # se for views ordena por views.
             queryset = queryset.order_by('-views')
-        if order == 'answers':  # Se for answers ordena por answers.
+        elif order == 'answers':  # Se for answers ordena por answers.
             queryset = queryset.order_by('-answers')
+        # self.args acessa os parâmetros não nomeados da url e self.kwargs os nomeados.
+        tag = self.kwargs.get('tag', '')
+        if tag:
+            # Filtra as tags que o slug contém.
+            queryset = queryset.filter(tags__slug__icontains=tag)
         return queryset
 
     # Busca todos as variáveis de contexto do template.
