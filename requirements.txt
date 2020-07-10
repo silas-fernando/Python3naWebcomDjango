@@ -19,7 +19,7 @@ Flask
 gitdb             
 GitPython         
 gunicorn          
-isort             
+isort==4.2.5           
 itsdangerous      
 Jinja2            
 kiwisolver        
