@@ -8,6 +8,7 @@ class ThreadAdmin(admin.ModelAdmin):
     list_display = ['title', 'author', 'created', 'modified']
     # author__email faz um join filtrando os autores com seus emails.
     search_fields = ['title', 'author__email', 'body']
+    prepopulated_fields = {'slug': ('title',)}
 
 
 class ReplyAdmin(admin.ModelAdmin):

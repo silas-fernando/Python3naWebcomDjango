@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 
 from taggit.managers import TaggableManager
 
@@ -25,6 +26,15 @@ class Thread(models.Model):
 
     def __str__(self):
         return self.title
+
+    """ OBSOLETO
+	@model.permalink
+	def get_absolute_url(self):
+        return('forum:thread', (), {'slug': self.slug})
+	"""
+
+    def get_absolute_url(self):
+        return reverse('forum:thread', args=(self.slug,))
 
     class Meta:  # Serve para melhorar a página admin.
         verbose_name = 'Tópico'

@@ -48,6 +48,11 @@ class ThreadView(DetailView):
     model = Thread
     template_name = 'forum/thread.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(ThreadView, self).get_context_data(**kwargs)
+        context['tags'] = Thread.tags.all()
+        return context
+
 
 # as_view() Transforma a classe ForumView em uma função que pode ser usada como uma view.
 index = ForumView.as_view()
