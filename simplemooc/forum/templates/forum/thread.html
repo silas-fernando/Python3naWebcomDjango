@@ -63,6 +63,44 @@
                     <a class="fright" href="" title="">Criado a {{ object.created|timesince }} atrás</a>
                 </p>
             </div>
+            <div class="well" id="div-comments">
+                <h4 id="comments">Respostas
+                <a class="fright" href="#add_comment">Responder</a></h4>
+                {% for reply in object.replies.all %}
+                <hr />
+                {% filter linebreaks %}
+                    <strong>{{ reply.author }}</strong> disse à {{ reply.created|timesince }} atrás:
+                    {{ reply.reply }}
+                    
+                    <a href="" title="" class="pure-button button-error">Cancelar Resposta Correta</a>
+
+                    <a href="" title="" class="pure-button button-success">Resposta Correta</a>
+
+                    <span class="fright label-success">resposta indicada pelo autor</span>
+                    <br class=""/>
+                    
+                    <span class="fright label-success">resposta indicada pelo autor</span>
+                    <br />
+                    
+                {% endfilter %}
+                {% endfor %}
+                <hr />
+                <form method="post" class="pure-form pure-form-stacked" id="add_comment">
+                    <fieldset>
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div class="pure-control-group">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {{ field.errors }}
+                        </div>
+                        {% endfor %}
+                        <div class="pure-controls">
+                            <button type="submit" class="pure-button pure-button-primary">Enviar</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
         </div>
     </div>
 </div>

@@ -1,7 +1,9 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView, View, ListView, DetailView
+from django.shortcuts import render, redirect
+from django.views.generic import (TemplateView, View, ListView, DetailView)
+from django.contrib import messages
 
-from .models import Thread
+from .models import Thread, Reply
+from .forms import ReplyForm
 
 
 # class ForumView(TemplateView):
@@ -39,7 +41,7 @@ class ForumView(ListView):  # Model para listagem de Tópicos.
     # Busca todos as variáveis de contexto do template.
     def get_context_data(self, **kwargs):
         context = super(ForumView, self).get_context_data(**kwargs)
-        context['tags'] = Thread.tags.all()  # Adiciona as tags ao contexto.
+        context['tags'] = Thread.tags.all()
         return context
 
 
@@ -48,10 +50,42 @@ class ThreadView(DetailView):
     model = Thread
     template_name = 'forum/thread.html'
 
+    def get(self, request, *args, **kwargs):
+        response = super(ThreadView, self).get(request, *args, **kwargs)
+        # Se o usuário não estiver logado ou se ele não for o autor do tópico em questão.
+        if not self.request.user.is_authenticated or self.object.author != self.request.user:
+            # Conta uma visualização para aquele tópico.
+            self.object.views = self.object.views + 1
+            self.object.save()
+        return response
+
     def get_context_data(self, **kwargs):
         context = super(ThreadView, self).get_context_data(**kwargs)
         context['tags'] = Thread.tags.all()
+        context['form'] = ReplyForm(self.request.POST or None)
         return context
+
+    def post(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:  # Se o usuário não estiver logado.
+            messages.error(
+                self.request, 'Para responder ao tópico é necessário estar logado.'
+            )
+            return redirect(self.request.path)  # Permanece na mesma página.
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        form = context['form']
+        if form.is_valid():
+            # Preenche o formulário, mas não o salva.
+            reply = form.save(commit=False)
+            reply.thread = self.object
+            reply.author = self.request.user
+            reply.save()
+            messages.success(
+                self.request, 'A sua resposta foi enviada com sucesso.'
+            )
+            context['form'] = ReplyForm()  # Limpa o formulário
+        # render_to_response: parecido com a função render, mas essa só precisa do contexto.
+        return self.render_to_response(context)
 
 
 # as_view() Transforma a classe ForumView em uma função que pode ser usada como uma view.

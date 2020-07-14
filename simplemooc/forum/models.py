@@ -33,6 +33,9 @@ class Thread(models.Model):
         return('forum:thread', (), {'slug': self.slug})
 	"""
 
+    # def get_absolute_url(self):
+    #    return reverse('forum:thread', args=(self.slug,))
+
     def get_absolute_url(self):
         return reverse('forum:thread', args=(self.slug,))
 
@@ -67,3 +70,23 @@ class Reply(models.Model):
         verbose_name_plural = 'Respostas'
         # ordering :rioritariamente ordena pela resposta correta indicada pelo usuário.
         ordering = ['-correct', 'created']
+
+
+# Toda vez que uma resposta é criada, essa função é executada em seguida.
+def post_save_reply(created, instance, **kwargs):
+    instance.thread.answers = instance.thread.replies.count()
+    instance.thread.save()
+
+
+# Toda vez que uma resposta é removida, essa função é executada em seguida.
+def post_delete_reply(instance, **kwargs):
+    instance.thread.answers = instance.thread.replies.count()
+    instance.thread.save()
+
+
+models.signals.post_save.connect(
+    post_save_reply, sender=Reply, dispatch_uid='post_save_reply'
+)
+models.signals.post_delete.connect(
+    post_delete_reply, sender=Reply, dispatch_uid='post_delete_reply'
+)
