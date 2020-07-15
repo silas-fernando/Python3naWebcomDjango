@@ -72,16 +72,27 @@
                     <strong>{{ reply.author }}</strong> disse à {{ reply.created|timesince }} atrás:
                     <br />
                     {{ reply.reply|linebreaksbr }}
-                    {% if reply.correct %}
-                        {% if reply.author == user %} <!-- Se usuário logado for o autor da resposta.-->
+                    {% if object.author == user %} <!-- Se o autor do tópico é o usuário logado.-->
                         <br /><br />
-                        <a href="{% url 'forum:reply_incorrect' reply.pk %}" title="" class="pure-button button-error">Cancelar Resposta Correta</a>
-                        {% endif %}
+
+                        <a href="{% url 'forum:reply_incorrect' reply.pk %}" title="" 
+                        class="pure-button button-error reply-cancel-correct-lnk{% if not reply.correct %} hidden {% endif %}">
+                            Cancelar Resposta Correta
+                        </a>
+                        
+                        <a href="{% url 'forum:reply_correct' reply.pk %}" title="" 
+                        class="pure-button button-success reply-correct-lnk{% if reply.correct %} hidden {% endif %}">
+                            Resposta Correta
+                        </a>
+                        
+                        <span class="fright label-success reply-correct-msg{% if not reply.correct %} hidden {% endif %}">
+                            resposta indicada pelo autor
+                        </span>
+                        <br class="reply-correct-msg{% if not reply.correct %} hidden {% endif %}" />
+                    {% elif reply.correct %} <!-- Se a resposta for correta e o usuário logado não for o autor.-->
+                        <br /><br />
                         <span class="fright label-success">resposta indicada pelo autor</span>
-                        <br />
-                    {% elif reply.author == user %} <!-- Se a resposta for correta e o usuário logado for o autor.-->
-                        <br /><br />
-                        <a href="{% url 'forum:reply_correct' reply.pk %}" title="" class="pure-button button-success">Resposta Correta</a>
+                        
                     {% endif %}
                 </p>
                     <!--
@@ -112,4 +123,43 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    $(".reply-cancel-correct-lnk").on("click", function(e){
+        e.preventDefault();
+        var $this = $(this); // Pega o elemento clicado e converte para Jquery.
+        var $p = $this.closest("p");
+        $.get($this.attr('href'), function(data){
+            if(data.success){
+                $p.find(".reply-correct-msg").addClass('hidden');
+                $this.addClass('hidden');
+                $p.find('.reply-correct-lnk').removeClass('hidden');
+            } else {
+                alert(data.message);
+            }
+        }, "json");
+        return false;
+    });
+    $('.reply-correct-lnk').on('click', function(e){
+        e.preventDefault();
+        var $this = $(this);
+        var $p = $this.closest("p");
+        $.get($this.attr('href'), function(data){
+            if(data.success){
+                $("#div-comments .reply-correct-msg").addClass('hidden');
+                $("#div-comments .reply-cancel-correct-lnk").addClass('hidden');
+                $("#div-comments .reply-correct-lnk").removeClass('hidden');
+                
+                $p.find(".reply-correct-msg").removeClass('hidden');
+                $this.addClass('hidden');
+                $p.find('.reply-cancel-correct-lnk').removeClass('hidden');
+            } else {
+                alert(data.message)
+            }
+        }, 'json');
+        return false;
+    })
+</script>
 {% endblock %}
