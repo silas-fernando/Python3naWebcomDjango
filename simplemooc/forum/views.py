@@ -1,4 +1,5 @@
 import json
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import (TemplateView, View, ListView, DetailView)
 from django.contrib import messages
