@@ -76,6 +76,12 @@ class Reply(models.Model):
 def post_save_reply(created, instance, **kwargs):
     instance.thread.answers = instance.thread.replies.count()
     instance.thread.save()
+    if instance.correct:  # Verifica se a resposta em questão é a correta.
+        # Busca todas as resposta, exceto a correta do tópico em questão.
+        instance.thread.replies.exclude(pk=instance.pk).update(
+            # Atribui falso para todas as respostas encontradas acima.
+            correct=False
+        )
 
 
 # Toda vez que uma resposta é removida, essa função é executada em seguida.

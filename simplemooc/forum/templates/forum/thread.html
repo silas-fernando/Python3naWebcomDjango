@@ -68,21 +68,29 @@
                 <a class="fright" href="#add_comment">Responder</a></h4>
                 {% for reply in object.replies.all %}
                 <hr />
-                {% filter linebreaks %}
+                <p>
                     <strong>{{ reply.author }}</strong> disse à {{ reply.created|timesince }} atrás:
-                    {{ reply.reply }}
-                    
-                    <a href="" title="" class="pure-button button-error">Cancelar Resposta Correta</a>
-
-                    <a href="" title="" class="pure-button button-success">Resposta Correta</a>
-
+                    <br />
+                    {{ reply.reply|linebreaksbr }}
+                    {% if reply.correct %}
+                        {% if reply.author == user %} <!-- Se usuário logado for o autor da resposta.-->
+                        <br /><br />
+                        <a href="{% url 'forum:reply_incorrect' reply.pk %}" title="" class="pure-button button-error">Cancelar Resposta Correta</a>
+                        {% endif %}
+                        <span class="fright label-success">resposta indicada pelo autor</span>
+                        <br />
+                    {% elif reply.author == user %} <!-- Se a resposta for correta e o usuário logado for o autor.-->
+                        <br /><br />
+                        <a href="{% url 'forum:reply_correct' reply.pk %}" title="" class="pure-button button-success">Resposta Correta</a>
+                    {% endif %}
+                </p>
+                    <!--
                     <span class="fright label-success">resposta indicada pelo autor</span>
                     <br class=""/>
                     
                     <span class="fright label-success">resposta indicada pelo autor</span>
                     <br />
-                    
-                {% endfilter %}
+                    -->
                 {% endfor %}
                 <hr />
                 <form method="post" class="pure-form pure-form-stacked" id="add_comment">

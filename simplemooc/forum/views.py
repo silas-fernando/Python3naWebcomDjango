@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import (TemplateView, View, ListView, DetailView)
 from django.contrib import messages
 
@@ -88,6 +88,20 @@ class ThreadView(DetailView):
         return self.render_to_response(context)
 
 
+class ReplyCorrectView(View):
+
+    correct = True
+
+    def get(self, request, pk):
+        reply = get_object_or_404(Reply, pk=pk, author=request.user)
+        reply.correct = self.correct
+        reply.save()
+        messages.success(request, 'Resposta atualizada com sucesso.')
+        return redirect(reply.thread.get_absolute_url())
+
+
 # as_view() Transforma a classe ForumView em uma função que pode ser usada como uma view.
 index = ForumView.as_view()
 thread = ThreadView.as_view()
+reply_correct = ReplyCorrectView.as_view()
+reply_incorrect = ReplyCorrectView.as_view(correct=False)
